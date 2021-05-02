@@ -1,0 +1,399 @@
+/** @OnlyCurrentDoc */
+
+/// Сначала удаляет игры из Игры, которые не относятся к сегодня и затем добавляет игры из Расписания, которые будут проходить сегодня по образцу ОбразецИгры. Запускается сотрудником, при приходе на работу.
+function getNewRowGames() {
+var schedule = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Расписание");
+var scheduleRange = schedule.getRange(1,1, schedule.getLastColumn(), 26);
+var conditionSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Данные");
+var condition = conditionSheet.getRange("T6").getValue();
+var conditionTODAY = conditionSheet.getRange("T2").getValue();
+var gameSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Игры");
+var gameRangeToCopy = gameSheet.getRange('A2:AO2');
+var gameValuesToCheck = gameSheet.getRange('B:B').getValues();
+var gameSampleSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("ОбразецИгры");
+var gameSampleRange = gameSampleSheet.getRange('A2:AO2');
+var row = gameSheet.getRange("A1").getRow();
+ for (var k=1; k<gameValuesToCheck.length; k++) {
+   if (gameValuesToCheck[2] != conditionTODAY){
+     gameSheet.deleteRow(2)
+   }
+ }
+for (var i = 1; i < condition; i++) {
+  var scheduleValue = scheduleRange.getValues();
+  var scheduleBackgrounds = scheduleRange.getBackgrounds();
+  if((scheduleValue[25][i]==condition)){
+    for(var j=2; j<21; j++){
+      if(scheduleValue[j][i]!=""){
+        gameSheet.insertRowAfter(row)
+        gameSampleRange.copyTo(gameRangeToCopy)
+        gameSheet.getRange("B2").setValue(scheduleValue[0][i])
+        gameSheet.getRange("C2").setValue(scheduleValue[j][0])
+        gameSheet.getRange("AN2").setValue(scheduleValue[j][i])
+        gameSheet.getRange("AO2").setValue(scheduleBackgrounds[j][i])
+        gameSheet.getRange("D2:N2").setValues(gameSheet.getRange("D2:N2").getValues())
+      }
+    }
+  }
+ }
+}
+
+
+
+
+/// Копирует из Образца Товары и Иное всталвяет в Товары и Иное.
+function getNewRowGoods() {
+  var ssSM = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Образец Товары и Иное");
+  var SMA3 = ssSM.getRange("A3");
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Товары и Иное");
+  var range = ss.getRange("A3");
+  var row = range.getRow();
+  var SMC3H3 = ssSM.getRange("C3:K3");
+  var rangeC3H3 = ss.getRange("C3:K3");
+  ss.insertRowBefore(row);
+  SMA3.copyTo(range);
+  ss.getRange("B3").setValue(new Date().toLocaleDateString());
+  SMC3H3.copyTo(rangeC3H3);
+}
+
+
+/// Копирует из Образца Выбытия и Поступления и всталвяет в Выбытия и Поступления.
+function getNewRowInOut() {
+  var ssSM = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Образец Выбытия и Поступления");
+  var SMA3 = ssSM.getRange("A3");
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Выбытия и Поступления");
+  var range = ss.getRange("A3");
+  var row = range.getRow();
+  var SMC3G3 = ssSM.getRange("C3:G3");
+  var rangeC3G3 = ss.getRange("C3:G3");
+  ss.insertRowBefore(row);
+  SMA3.copyTo(range);
+  ss.getRange("B3").setValue(new Date().toLocaleDateString());
+  SMC3G3.copyTo(rangeC3G3);
+}
+
+
+/// Копирует из Образца Погашения и всталвяет в Погашения.
+function getNewRowPutOut() {
+  var ssSM = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Образец Погасить");
+  var SMA3 = ssSM.getRange("A3");
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Погасить");
+  var range = ss.getRange("A3");
+  var row = range.getRow();
+  var SMC3F3 = ssSM.getRange("C3:F3");
+  var rangeC3F3 = ss.getRange("C3:F3");
+  ss.insertRowBefore(row);
+  SMA3.copyTo(range);
+  ss.getRange("B3").setValue(new Date().toLocaleDateString());
+  SMC3F3.copyTo(rangeC3F3);
+}
+
+
+/// Копирует из Образца Выбытия и Поступелния10 и всталвяет в Выбытия и Поступелния.
+function getNewRowInOut10() {
+  var ssSM = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Образец Выбытия и Поступления10");
+  var SMA3A12 = ssSM.getRange("A3:A12");
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Выбытия и Поступления");
+  var range = ss.getRange("A3:A12");
+  var row = range.getRow();
+  var SMC3G12 = ssSM.getRange("C3:G12");
+  var rangeC3G12 = ss.getRange("C3:G12");
+  ss.insertRowsBefore(row, 10);
+  SMA3A12.copyTo(range);
+  ss.getRange("B3:B12").setValue(new Date().toLocaleDateString());
+  SMC3G12.copyTo(rangeC3G12);
+}
+
+
+/// Копирует из Образца Погасить10 и всталвяет в Погасить.
+function getNewRowPutOut10() {
+  var ssSM = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Образец Погасить10");
+  var SMA3A12 = ssSM.getRange("A3:A12");
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Погасить");
+  var range = ss.getRange("A3:A12");
+  var row = range.getRow();
+  var SMC3G12 = ssSM.getRange("C3:F12");
+  var rangeC3G12 = ss.getRange("C3:F12");
+  ss.insertRowsBefore(row, 10);
+  SMA3A12.copyTo(range);
+  ss.getRange("B3:B12").setValue(new Date().toLocaleDateString());
+  SMC3G12.copyTo(rangeC3G12);
+}
+
+
+
+/// Добавляем меню в документ и скрипты в это меню.
+function onOpen(){
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu("Меню")
+  .addItem("Получить Игры", "getNewRowGames")
+  .addSeparator()
+  .addItem("Добавить Товар или Иное", "getNewRowGoods")
+  .addSeparator()
+  .addItem("Добавить Выбытие или поступление", "getNewRowInOut")
+  .addSeparator()
+  .addItem("Добавить Погашение", "getNewRowPutOut")
+  .addSeparator()
+  .addItem("Добавить Выбытие или поступелние (10)", "getNewRowInOut10")
+  .addSeparator()
+  .addItem("Добавить Погашение (10)", "getNewRowPutOut10")
+  .addSeparator()
+  .addItem("Добавить Зарплату", "salary")
+  .addSeparator()
+  .addItem("Добавить Расписание", "getnewschedule")
+  .addSeparator()
+  .addItem("Добавить Выезд", "outside")
+  .addSeparator()
+  .addItem("Добавить Результат", "result")
+  .addSeparator()
+  .addToUi();
+}
+
+
+
+
+
+/// Прячем строки не относящиеся к текущему дню в Товары и Иное.
+function hideRows2() {
+var sheets = ["Товары и Иное"];
+var conditionSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Данные");
+var condition = conditionSheet.getRange("T2").getValue().toLocaleDateString();
+for (var i = 0, sLen = sheets.length; i < sLen; i++) {
+       var sheet = SpreadsheetApp.getActive()
+           .getSheetByName(sheets[i])
+       var val = sheet.getRange('b:b')
+           .getValues();
+       for (var j = 2, vLen = val.length; j < vLen; j++) {
+           if ((val[j][0]).toLocaleDateString()!=condition) sheet.hideRows(j + 1)
+           }
+       }
+}
+
+
+
+/// Прячем строки не относящиеся к текущему дню в Выбытия и Поступления.
+function hideRows3() {
+var sheets = ["Выбытия и Поступления"];
+var conditionSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Данные");
+var condition = conditionSheet.getRange("T2").getValue().toLocaleDateString();
+for (var i = 0, sLen = sheets.length; i < sLen; i++) {
+       var sheet = SpreadsheetApp.getActive()
+           .getSheetByName(sheets[i])
+       var val = sheet.getRange('b:b')
+           .getValues();
+       for (var j = 2, vLen = val.length; j < vLen; j++) {
+           if ((val[j][0]).toLocaleDateString()!=condition) sheet.hideRows(j + 1)
+           }
+       }
+}
+
+
+
+/// Прячем строки не относящиеся к текущему дню в Касса.
+function hideRows4() {
+var sheets = ["Касса"];
+var conditionSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Данные");
+var condition = conditionSheet.getRange("T2").getValue().toLocaleDateString();
+for (var i = 0, sLen = sheets.length; i < sLen; i++) {
+       var sheet = SpreadsheetApp.getActive()
+           .getSheetByName(sheets[i])
+       var val = sheet.getRange('b:b')
+           .getValues();
+       for (var j = 2, vLen = val.length; j < vLen; j++) {
+           if ((val[j][0]).toLocaleDateString()!=condition) sheet.hideRows(j + 1)
+           }
+       }
+}
+
+
+
+
+/// Раскрывает спрятанные строки в Касса.
+function unhideRows() {
+var sheet = SpreadsheetApp.getActive().getSheetByName("Касса");
+sheet.unhideRow(sheet.getRange('A:A'))
+}
+
+
+
+
+/// Удаляет пустые строки из "Игры", "Товары и Иное", "Выбытия и Поступления", "Погасить".
+function deleteRows() {
+var sheets = ["Игры", "Товары и Иное", "Выбытия и Поступления", "Погасить"];
+for (var j = 0, sLen = sheets.length; j < sLen; j++) {
+  var sheet = SpreadsheetApp.getActive()
+  .getSheetByName(sheets[j])
+  var rows = sheet.getDataRange();
+  var numRows = rows.getNumRows();
+  var values = rows.getValues();
+
+  var rowsDeleted = 0;
+  for (var i = 2; i <= numRows - 1; i++) {
+    var row = values[i];
+    if (row[2] == 0 || row[2] == '' || row[2] == '-') {
+      sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
+      rowsDeleted++;
+    }
+  }
+}
+}
+
+/// Указывает номер для замены (Пока не используется).
+function replaceGoods() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Товары и Иное");
+  var data = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Данные");
+  var values = data.getRange("V3").getValues();
+  ss.getRange("K3").setValue(Math.max(values)+1);
+}
+
+/// Прячем столбцы не относящиеся к указанному промежутку недель в расписание (промедуток составляет оклоло 3 месяцев) (не используется)
+function hideCol1() {
+var sheets = ["Расписание"];
+var conditionSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Данные");
+var condition1 = conditionSheet.getRange("T4").getValue();
+var condition2 = conditionSheet.getRange("T5").getValue();
+for (var i = 0, sLen = sheets.length; i < sLen; i++) {
+       var sheet = SpreadsheetApp.getActive()
+           .getSheetByName(sheets[i])
+       var val = sheet.getRange(1,1, sheet.getLastColumn(), 25)
+           .getValues();
+       for (var j = 1, vLen = val.length; j < vLen; j++) {
+           if ((val[24][j]<condition1) || (val[24][j]>condition2)) sheet.hideColumns(j + 1)
+           }
+       }
+}
+
+
+
+
+
+
+
+/// Добавляем игру в архив
+function archive() {
+var schedule = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Расписание");
+var scheduleRange = schedule.getRange(1,1, 26, schedule.getLastColumn());
+var conditionSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Данные");
+var condition = conditionSheet.getRange("T6").getValue();
+var archiveSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Архив");
+var archiveRangeToCopy = archiveSheet.getRange('B2:BU2');
+var archiveSampleSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("ОбразецАрхив");
+var archiveSampleRange = archiveSampleSheet.getRange('B2:BU2');
+var row = archiveSheet.getRange("A2").getRow();
+var notes = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Записи");
+var rowNote = notes.getRange("A2").getRow();
+var i = 1;
+while (i < condition){
+  var scheduleValue = scheduleRange.getValues();
+  var scheduleBackgrounds = scheduleRange.getBackgrounds();
+  if((scheduleValue[25][i]<condition)){
+    for(var j=2; j<21; j++){
+      if(scheduleValue[j][i]!=""){
+        archiveSheet.insertRowBefore(row)
+        archiveSampleRange.copyTo(archiveRangeToCopy)
+        archiveSampleSheet.getRange("A2").copyTo(archiveSheet.getRange("A2"))
+        archiveSheet.getRange("C2").setValue(scheduleValue[0][i])
+        archiveSheet.getRange("D2").setValue(scheduleValue[j][0])
+        archiveSheet.getRange("E2").setValue(scheduleValue[j][i])
+        archiveSheet.getRange("F2").setValue(scheduleBackgrounds[j][i])
+        archiveRangeToCopy.setValues(archiveRangeToCopy.getValues())
+      }
+    }
+  }
+  i++
+ }
+notes.insertRowBefore(rowNote);
+notes.getRange("A2").setValue(scheduleValue[0][1])
+notes.getRange("B2").setValue(scheduleValue[21][1])
+notes.getRange("C2").setValue(scheduleValue[22][1])
+notes.getRange("D2").setValue(scheduleValue[23][1])
+ for(var k=1; k<scheduleRange.getWidth(); k++) {
+   var scheduleValue = scheduleRange.getValues();
+   if(scheduleValue[25][2]<=condition) {
+    schedule.deleteColumn(2)
+   }
+ }
+}
+ 
+/// Функция для получения цвета ячейки
+function hasBackground(c) {
+  var range = SpreadsheetApp.getActiveSheet().getRange(c),
+      color = range.getBackground();
+  return color;
+}
+
+
+/// Копирует из ОбразцаЗарплата в Зарплата.
+function salary() {
+var salarySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Зарплата");
+var salarySheetSample = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("ОбразецЗарплата");
+var salaryRange = salarySheet.getRange('A3:s3');
+var salaryRangeSample = salarySheetSample.getRange('A3:s3');
+var row = salarySheet.getRange("A2").getRow();
+salarySheet.insertRowAfter(row);
+salaryRangeSample.copyTo(salaryRange);
+}
+
+
+/// Добавляем расписание на 30 дней вперед
+function getnewschedule() {
+var schedule = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Расписание");
+var scheduleSample = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("ОбразецРасписание");
+var scheduleRangeSample = scheduleSample.getRange('A1:AD26');
+var calendar = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Календарь");
+var calendarRange = calendar.getRange("A2:A");
+column = schedule.getLastColumn();
+schedule.insertColumnsAfter(column,30);
+var scheduleRange = schedule.getRange(1,column+1, schedule.getLastColumn(), 26);
+var scheduleValues = scheduleRange.getValues();
+scheduleRangeSample.copyTo(scheduleRange);
+scheduleRange.setValues(scheduleRange.getValues())
+schedule.hideRows(25)
+schedule.hideRows(26)
+}
+
+
+/// Копирует из ОбразцаВыезд в Выезд.
+function outside() {
+var outsideSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Выезд");
+var outsideSheetSample = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("ОбразецВыезд");
+var outsideRange = outsideSheet.getRange('A2:J2');
+var outsideRangeSample = outsideSheetSample.getRange('A2:J2');
+var row = outsideSheet.getRange("A1").getRow();
+outsideSheet.insertRowAfter(row);
+outsideRangeSample.copyTo(outsideRange);
+outsideSheet.getRange("B2").setValue(new Date().toLocaleDateString());
+}
+
+/// Копирует из ОбразцаРезультат в Результат.
+function result() {
+var resultSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Результат");
+var resultSheetSample = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("ОбразецРезультат");
+var resultRange = resultSheet.getRange('A2:f2');
+var resultRangeSample = resultSheetSample.getRange('A2:f2');
+var row = resultSheet.getRange("A1").getRow();
+resultSheet.insertRowAfter(row);
+resultRangeSample.copyTo(resultRange);
+resultSheet.getRange("B2").setValue(new Date().toLocaleDateString());
+}
+
+
+/// Удаляет пустые строки из "Игры", "Товары и Иное", "Выбытия и Поступления", "Погасить".
+function deleteRows() {
+var sheets = ["Товары и Иное", "Выбытия и Поступления", "Погасить"];
+for (var j = 0, sLen = sheets.length; j < sLen; j++) {
+  var sheet = SpreadsheetApp.getActive()
+  .getSheetByName(sheets[j])
+  var rows = sheet.getDataRange();
+  var numRows = rows.getNumRows();
+  var values = rows.getValues();
+
+  var rowsDeleted = 0;
+  for (var i = 2; i <= numRows - 1; i++) {
+    var row = values[i];
+    if (row[2] == 0 || row[2] == '' || row[2] == '-') {
+      sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
+      rowsDeleted++;
+    }
+  }
+}
+}
